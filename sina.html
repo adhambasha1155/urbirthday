@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+
+  <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -6,6 +7,7 @@
   <title>Happy Birthday Sinaaa 💖</title>
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
   <style>
+    /* (Styles are unchanged except anything related to hidden message or heart rain removed) */
     body {
       margin: 0;
       font-family: 'Pacifico', cursive;
@@ -139,28 +141,6 @@
       color: white;
       cursor: pointer;
     }
-
-    #hidden-message {
-      display: none;
-      background-color: #fff0f5;
-      height: 100vh;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      z-index: 1000;
-    }
-
-    #heart-rain {
-      position: fixed;
-      pointer-events: none;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 999;
-      display: none;
-    }
   </style>
 </head>
 <body>
@@ -183,9 +163,7 @@
     <div class="slider-container" id="memories-slider">
       <button class="slider-arrow left" id="slider-prev">&#8592;</button>
       <div class="slider" id="slider-track">
-        <div class="slide">
-          <video src="intro.mp4" controls playsinline preload="auto" poster="photo1.jpg"></video>
-        </div>
+        <div class="slide"><video src="intro.mp4" controls playsinline preload="auto" poster="photo1.jpg"></video></div>
         <div class="slide"><img src="photo1.jpg" alt="Memory 1"></div>
         <div class="slide"><img src="photo2.jpg" alt="Memory 2"></div>
         <div class="slide"><img src="photo3.jpg" alt="Memory 3"></div>
@@ -206,9 +184,7 @@
         <div class="slide"><img src="photo18.jpg" alt="Memory 16"></div>
         <div class="slide"><img src="photo19.jpg" alt="Memory 16"></div>
         <div class="slide"><img src="photo20.jpg" alt="Memory 16"></div>
-        <div class="slide">
-          <video src="outro.mp4" controls playsinline preload="auto" poster="photo12.jpg"></video>
-        </div>
+        <div class="slide"><video src="outro.mp4" controls playsinline preload="auto" poster="photo12.jpg"></video></div>
       </div>
       <button class="slider-arrow right" id="slider-next">&#8594;</button>
     </div>
@@ -217,18 +193,10 @@
 
   <div class="section buttons" style="display:none;">
     <button onclick="window.location.href='tel:01008795448'">Call Me</button>
-    <button onclick="document.getElementById('hidden-message').style.display='flex'">See Hidden Message</button>
   </div>
-
-  <div id="hidden-message">
-    <input type="password" id="password" placeholder="Enter Password" />
-    <button onclick="checkPassword()">Submit</button>
-  </div>
-
-  <canvas id="heart-rain"></canvas>
-  <audio id="iloveu-sound" src="iloveyou.mp3" preload="auto"></audio>
 
   <script>
+    // Sequence display
     setTimeout(() => {
       document.getElementById('gif-section').style.display = 'none';
       document.getElementById('message').style.display = 'block';
@@ -240,6 +208,7 @@
       }, 2500);
     }, 5000);
 
+    // Slider functionality
     const slider = document.getElementById('slider-track');
     const slides = slider.children;
     const dotsContainer = document.getElementById('slider-dots');
@@ -258,7 +227,7 @@
 
     function goToSlide(idx) {
       currentSlide = (idx + totalSlides) % totalSlides;
-      slider.style.transform = translateX(-${currentSlide * 100}%);
+      slider.style.transform = `translateX(-${currentSlide * 100}%)`;
       updateDots();
     }
 
@@ -267,7 +236,7 @@
     updateDots();
     goToSlide(0);
 
-    // Touch swipe
+    // Swipe gestures
     let startX = 0;
     slider.parentElement.addEventListener('touchstart', e => {
       if (e.touches.length === 1) startX = e.touches[0].clientX;
@@ -279,67 +248,6 @@
         else if (dx < -30) goToSlide(currentSlide + 1);
       }
     });
-
-    function checkPassword() {
-      const input = document.getElementById('password').value;
-      if (input === '2912') {
-        document.getElementById('hidden-message').style.display = 'none';
-        document.getElementById('heart-rain').style.display = 'block';
-        const sound = document.getElementById('iloveu-sound');
-        sound.play().catch(err => console.log('Audio failed:', err));
-        startHearts();
-      } else {
-        alert('Wrong password 💔');
-      }
-    }
-
-    function startHearts() {
-      const canvas = document.getElementById('heart-rain');
-      const ctx = canvas.getContext('2d');
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      const hearts = [];
-
-      function Heart() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 20 + 10;
-        this.speed = Math.random() * 2 + 1;
-      }
-
-      function drawHeart(x, y, size) {
-        ctx.save();
-        ctx.beginPath();
-        ctx.moveTo(x, y);
-        ctx.bezierCurveTo(x, y - size / 2, x - size, y - size / 2, x - size, y);
-        ctx.bezierCurveTo(x - size, y + size, x, y + size * 1.5, x, y + size * 2);
-        ctx.bezierCurveTo(x, y + size * 1.5, x + size, y + size, x + size, y);
-        ctx.bezierCurveTo(x + size, y - size / 2, x, y - size / 2, x, y);
-        ctx.fillStyle = 'red';
-        ctx.fill();
-        ctx.restore();
-      }
-
-      function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        for (let i = 0; i < hearts.length; i++) {
-          let h = hearts[i];
-          h.y += h.speed;
-          drawHeart(h.x, h.y, h.size);
-          if (h.y > canvas.height) {
-            hearts[i] = new Heart();
-            hearts[i].y = 0;
-          }
-        }
-        requestAnimationFrame(animate);
-      }
-
-      for (let i = 0; i < 50; i++) {
-        hearts.push(new Heart());
-      }
-      animate();
-    }
   </script>
 </body>
-
 </html>
