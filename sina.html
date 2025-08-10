@@ -226,7 +226,7 @@
 
     function goToSlide(idx) {
       currentSlide = (idx + totalSlides) % totalSlides;
-      slider.style.transform = translateX(-${currentSlide * 100}%);
+      slider.style.transform = `translateX(-${currentSlide * 100}%)`;
       updateDots();
     }
 
